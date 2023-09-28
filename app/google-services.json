@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "891700911036",
+    "project_id": "rgfdsa",
+    "storage_bucket": "rgfdsa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891700911036:android:e61c9b346446b50fb9e9b9",
+        "android_client_info": {
+          "package_name": "quizz.sportss.realsbet.question.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfinhyQ42spnGGRAjaw8jIgBOk0mCN8xA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
