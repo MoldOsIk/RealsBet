@@ -4,23 +4,17 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import quizz.sportss.realsbet.question.app.ui.theme.EndGame
 import quizz.sportss.realsbet.question.app.ui.theme.SportsRealsbeTheme
 import quizz.sportss.realsbet.question.app.ui.theme.gamescreen
 import quizz.sportss.realsbet.question.app.ui.theme.homescreen
@@ -31,6 +25,7 @@ val RULES = "rules"
 val POLICY = "policy"
 val GAME = "game"
 val PREGAME = "pregame"
+val ENDGAME = "endgame"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +36,22 @@ class MainActivity : ComponentActivity() {
         wcontroller.hide(WindowInsetsCompat.Type.statusBars())
         wcontroller.hide(WindowInsetsCompat.Type.navigationBars())
         wcontroller.hide(WindowInsetsCompat.Type.displayCutout())
-
+        sharedPreferences.edit().putInt("balance",1000).apply()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             SportsRealsbeTheme {
-                val imageResourceIds = listOf(
-                    painterResource(id = R.drawable.footbal),
-                    painterResource(id = R.drawable.footbal),
-                    painterResource(id = R.drawable.footbal),
 
-                )
+
                 val navController = rememberNavController()
+                val topice = remember{
+                    mutableStateOf(0)
+                }
+                val scoree = remember {
+                    mutableStateOf(0)
+                }
+                val bete = remember{
+                    mutableStateOf(0)
+                }
                 NavHost(navController = navController, startDestination = HOMESCREEN) {
 
                     composable(HOMESCREEN) {
@@ -67,15 +67,30 @@ class MainActivity : ComponentActivity() {
 
                     }
                     composable(PREGAME) {
-                        pregamescreen(goGame = {navController.navigate(GAME)},
-                            sharedPreferences )
+                        pregamescreen(goGame = {
+                            topic,bet ->
+                            topice.value = topic
+                            bete.value = bet
+                            navController.navigate(GAME)},
+                            )
                     }
                     composable(GAME) {
-                        gamescreen(sharedPreferences)
+                        gamescreen(goPreGame = {navController.navigate(PREGAME)},
+                            topic = topice.value,
+                            EndGame = {
+                                score->
+                                scoree.value = score
+                                navController.navigate(ENDGAME)
+                                      },
+                            )
+                    }
+                    composable(ENDGAME) {
+                        EndGame(scoree.value, bete.value,
+                            goPreGame = {navController.navigate(PREGAME)}) }
                     }
                 }
             }
         }
     }
-}
+
 

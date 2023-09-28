@@ -1,5 +1,6 @@
 package quizz.sportss.realsbet.question.app.ui.theme
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -21,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.CncBet.jogar.a123.ui.theme.porpg.SliderWithStep
 import com.CncBet.jogar.a123.ui.theme.porpg.button_
 import com.CncBet.jogar.a123.ui.theme.porpg.text
@@ -45,21 +49,19 @@ import quizz.sportss.realsbet.question.app.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun pregamescreen(goGame:() -> Unit,
-                  sharedPreferences: SharedPreferences) {
+fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
+    val sharedPreferences = LocalContext.current.getSharedPreferences("1", Context.MODE_PRIVATE)
     val images = listOf(
         R.drawable.footbal,
         R.drawable.basketball,
         R.drawable.hockey
     )
+    val balance = sharedPreferences.getInt("balance", 0)
     val fullWidth = LocalConfiguration.current.screenWidthDp
     val fullHeight = LocalConfiguration.current.screenHeightDp
         val pagerState = rememberPagerState(pageCount = {
             3
         })
-    val points by remember{
-        mutableStateOf(0)
-    }
     var bet by remember{
         mutableStateOf(0)
     }
@@ -75,7 +77,7 @@ fun pregamescreen(goGame:() -> Unit,
         {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 text("Your game points:",20)
-                text("${points}",  20)
+                text("${balance}",  20)
 
             }
 
@@ -83,9 +85,8 @@ fun pregamescreen(goGame:() -> Unit,
 
 
         HorizontalPager(state = pagerState) { page ->
-            sharedPreferences.edit().putInt("topic", images[page % images.size])
-            Log.d("fdfd", "${sharedPreferences.getInt("topic", 0)}")
-            button_(onClick = { goGame() }) {
+            val topic = page % images.size
+            button_(onClick = { goGame(topic, bet) }) {
                 Image(
                     painter = painterResource(id = images[page % images.size]),
                     contentDescription = null,
@@ -112,7 +113,7 @@ fun pregamescreen(goGame:() -> Unit,
             ) {
 
                 text("Place you score:", 20)
-                text("$bet", 20)
+                text("${bet}", 20)
                 SliderWithStep(
                     value = bet.toFloat(),
                     onValueChange = {
@@ -124,7 +125,6 @@ fun pregamescreen(goGame:() -> Unit,
                     sliderWidth = (fullWidth*0.6).dp,
                     sliderHeight = (fullHeight*0.2).dp
                 )
-
             }
         }
     }

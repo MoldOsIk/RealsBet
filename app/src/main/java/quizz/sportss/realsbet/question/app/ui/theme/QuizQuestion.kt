@@ -32,12 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.CncBet.jogar.a123.ui.theme.porpg.text
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -49,8 +51,7 @@ fun QuizQuestion(
     rightAnswer: String,
     answersState: MutableState<Int>,
     goNext: (answersCount:Int) -> Unit,
-    goLose: () -> Unit,
-    goMenu: () -> Unit,
+    goEnd: (answersCount: Int) -> Unit,
     question: String,
 )
 {
@@ -65,20 +66,19 @@ fun QuizQuestion(
 
         ) {
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(Color.White)
-            )
-
-            val rightAnswerNumber = remember {
+            val key = remember {
+                mutableStateOf(0)
+            }
+            val rightAnswerNumber = remember(key.value) {
                 answers.indexOf(rightAnswer)+1
             }
-            val selectedAnswer = remember { mutableStateOf<Int?>(null) }
-            val selectionEnabled = remember { mutableStateOf(true) }
-            val millisecondsLast = remember{ Animatable(60000f) }
+            val selectedAnswer = remember(key.value) { mutableStateOf<Int?>(null) }
+            val selectionEnabled = remember(key.value) { mutableStateOf(true) }
+            val millisecondsLast = remember(key.value){ Animatable(60000f) }
 
+            val questionNumber = remember {
+                mutableStateOf(0)
+            }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
@@ -91,18 +91,18 @@ fun QuizQuestion(
                 Text(
                     text = "Level 1",
                     modifier = Modifier,
-                    color = Color.Gray,
+                    color = secondary,
                     fontSize = 22.sp
                 )
                 Text(
-                    text = "${answersState.value}/10",
-                    color = Color.Green,
+                    text = "${questionNumber.value}/10",
+                    color = green,
                     fontSize = 38.sp
                 )
             }
-            LaunchedEffect(Unit){
-                millisecondsLast.animateTo(0f, tween(60000, easing = LinearEasing))
-                goLose.invoke()
+            LaunchedEffect(key.value){
+                millisecondsLast.animateTo(0f, tween(10000, easing = LinearEasing))
+                goEnd.invoke(answersState.value)
             }
 
             LaunchedEffect(key1 = selectedAnswer.value){
@@ -115,6 +115,7 @@ fun QuizQuestion(
                         if(selectedAnswer.value == rightAnswerNumber-1)
                             answersState.value++
                         goNext.invoke(answersState.value)
+                        key.value ++
                     }
 
                 }
@@ -131,7 +132,7 @@ fun QuizQuestion(
                         .clip(
                             RoundedCornerShape(40)
                         ),
-                    color = Color.Green, trackColor = Color.White
+                    color = green, trackColor = Color.White
                 )
 
             }
@@ -139,7 +140,7 @@ fun QuizQuestion(
 
             LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
                 item {
-                    Text(text = question)
+                    Text(text = question, fontSize = 18.sp, color = secondary,modifier = Modifier.padding(vertical =  16.dp))
                 }
                 items(answers.size) { index ->
                     val answer = answers[index]
@@ -147,17 +148,17 @@ fun QuizQuestion(
                     val boxColor = when {
 
 
-                        selectedAnswer.value == rightAnswerNumber -1 && rightAnswerNumber -1 == index && !selectionEnabled.value -> Color.Green
-                        index == rightAnswerNumber-1 && !selectionEnabled.value -> Color.Green
-                        selectedAnswer.value == index && rightAnswerNumber - 1 != index  && !selectionEnabled.value -> Color.Red
-                        selectedAnswer.value == index -> Color.Yellow
-                        else -> Color.Gray
+                        selectedAnswer.value == rightAnswerNumber -1 && rightAnswerNumber -1 == index && !selectionEnabled.value -> green
+                        index == rightAnswerNumber-1 && !selectionEnabled.value -> green
+                        selectedAnswer.value == index && rightAnswerNumber - 1 != index  && !selectionEnabled.value -> red
+                        selectedAnswer.value == index -> secondary
+                        else -> background
                     }
 
                     val textColor = when {
-                        selectedAnswer.value == index -> Color.Gray
-                        rightAnswerNumber - 1  == index && !selectionEnabled.value -> Color.Gray
-                        else -> Color.Yellow
+                        selectedAnswer.value == index -> background
+                        rightAnswerNumber - 1  == index && !selectionEnabled.value -> background
+                        else -> secondary
                     }
                     Note(onClick = {
                         if(selectionEnabled.value) {
@@ -168,9 +169,6 @@ fun QuizQuestion(
                 }
             }
         }
-    }
-    BackHandler {
-        goMenu.invoke()
     }
 }
 @Composable

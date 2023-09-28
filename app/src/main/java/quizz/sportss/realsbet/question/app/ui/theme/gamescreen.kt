@@ -1,8 +1,7 @@
 package quizz.sportss.realsbet.question.app.ui.theme
 
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
@@ -11,24 +10,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.CncBet.jogar.a123.ui.theme.porpg.button_
+import com.CncBet.jogar.a123.ui.theme.porpg.text
 import quizz.sportss.realsbet.question.app.R
 
 @Composable
 
-fun gamescreen(sharedPreferences: SharedPreferences) {
+fun gamescreen(topic: Int,
+               goPreGame:() -> Unit,
+               EndGame:(score:Int)-> Unit, ){
 
     var currentQuestionIndex by remember { mutableStateOf(0) }
     var correctAnswers by remember { mutableStateOf(0) }
-
     val imagePainterList = listOf(
         painterResource(id = R.drawable.basketball),
         painterResource(id = R.drawable.footbal),
         painterResource(id = R.drawable.hockey)
     )
-    val questionsbasket = listOf(
+    val questionsbasket = remember{listOf(
+
         Question("What is the diameter of a basketball hoop?",
             listOf("a) 40 cm", "b) 45 cm", "c) 50 cm"), "b) 45 cm"),
         Question("What material is used to make a basketball?",
@@ -54,9 +59,8 @@ fun gamescreen(sharedPreferences: SharedPreferences) {
             listOf("a) Three-point line", "b) Free-throw line", "c) Bonus zone"), "a) Three-point line"),
 
         Question("Which team has won the most NBA championships?\n",
-            listOf("a) Los Angeles Lakers", "b) Boston Celtics", "c) Golden State Warriors"), "b) Boston Celtics"),
-    )
-    val questionsfootbal = listOf(
+            listOf("a) Los Angeles Lakers", "b) Boston Celtics", "c) Golden State Warriors"), "b) Boston Celtics"))}
+    val questionsfootbal = remember{listOf(
         Question("How many players are there on a standard football team?",
             listOf("a) 7", "b) 9", "c) 11"), "c) 11"),
 
@@ -94,8 +98,8 @@ fun gamescreen(sharedPreferences: SharedPreferences) {
             "a) Manchester United"),
 
 
-    )
-    val questionshockey = listOf(
+        )}
+    val questionshockey = remember{listOf(
         Question("What instrument is used to strike the puck in hockey?",
             listOf("a) Stick", "b) Ball", "c) Racket"), "a) Stick"),
 
@@ -132,29 +136,72 @@ fun gamescreen(sharedPreferences: SharedPreferences) {
                 "play with reduced player strength due to rule violations?",
             listOf("a) Supreme Court", "b) Shootout", "с) Penalty kill"),
             "с) Penalty kill"),
-    )
+    )}
     val answersState = remember{
         mutableStateOf(0)
     }
-    val topic = sharedPreferences.getInt("topic", 0)
 
     Image(painter = painterResource(id = R.drawable.gamebg), contentDescription = "" ,
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop)
 
-        if (currentQuestionIndex < questionsfootbal.size) {
+    if(topic == 0)
+    {
+        if (currentQuestionIndex < questionsbasket.size) {
             QuizQuestion(
                 question = questionsfootbal[currentQuestionIndex].text,
                 answers = questionsfootbal[currentQuestionIndex].options,
                 rightAnswer = questionsfootbal[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
+                goNext = { currentQuestionIndex++ },
+                goEnd = { EndGame(answersState.value) }
+            )
+
+        }
+        else EndGame(answersState.value)
+
+    }
+
+    if(topic == 1)
+    {
+        if (currentQuestionIndex < questionsbasket.size) {
+            QuizQuestion(
+                question = questionsbasket[currentQuestionIndex].text,
+                answers = questionsbasket[currentQuestionIndex].options,
+                rightAnswer = questionsbasket[currentQuestionIndex].correctAnswer,
+                answersState = answersState,
                 goNext = {currentQuestionIndex++},
-                goMenu = {},
-                goLose = {}
+                goEnd = {EndGame(answersState.value)}
             )
         } else {
-            QuizResult(correctAnswers = correctAnswers, totalQuestions = questionsfootbal.size)
+            EndGame(answersState.value)
         }
+    }
+    if(topic == 2)
+    {
+        if (currentQuestionIndex < questionshockey.size) {
+            QuizQuestion(
+                question = questionshockey[currentQuestionIndex].text,
+                answers = questionshockey[currentQuestionIndex].options,
+                rightAnswer = questionshockey[currentQuestionIndex].correctAnswer,
+                answersState = answersState,
+                goNext = {currentQuestionIndex++},
+                goEnd = {EndGame(answersState.value)}
+            )
+        } else {
+            EndGame(answersState.value)
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter)
+    {
+        button_(onClick = { goPreGame() }, modifier = Modifier.align(Alignment.BottomCenter)) {
+            text(text = "Back", size = 30)
+        }
+    }
+
+
 
 
 }
