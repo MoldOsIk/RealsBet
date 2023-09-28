@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation("com.airbnb.android:lottie:6.1.0")
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-config-ktx:21.4.1")
     implementation("androidx.navigation:navigation-compose:2.7.1")
