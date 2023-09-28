@@ -1,5 +1,7 @@
 package quizz.sportss.realsbet.question.app.ui.theme
 
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,7 +45,8 @@ import quizz.sportss.realsbet.question.app.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun pregamescreen(goGame:() -> Unit) {
+fun pregamescreen(goGame:() -> Unit,
+                  sharedPreferences: SharedPreferences) {
     val images = listOf(
         R.drawable.footbal,
         R.drawable.basketball,
@@ -78,7 +81,10 @@ fun pregamescreen(goGame:() -> Unit) {
 
         }
 
+
         HorizontalPager(state = pagerState) { page ->
+            sharedPreferences.edit().putInt("topic", images[page % images.size])
+            Log.d("fdfd", "${sharedPreferences.getInt("topic", 0)}")
             button_(onClick = { goGame() }) {
                 Image(
                     painter = painterResource(id = images[page % images.size]),
@@ -86,9 +92,12 @@ fun pregamescreen(goGame:() -> Unit) {
                     modifier = Modifier
                         .padding(start = (fullWidth * 0.2).dp)
                         .clip(RoundedCornerShape(30f))
-                        .border(width = 4.dp, color = Color.White)
+                        .border(width = 4.dp, color = Color.White),
                 )
+
             }
+
+
 
         }
         text( "Select the topic of the questions:",  20,

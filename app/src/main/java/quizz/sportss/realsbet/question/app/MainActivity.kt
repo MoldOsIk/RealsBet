@@ -1,5 +1,6 @@
 package quizz.sportss.realsbet.question.app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -31,7 +34,7 @@ val PREGAME = "pregame"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        val sharedPreferences = getSharedPreferences("1", Context.MODE_PRIVATE)
         val wcontroller = WindowCompat.getInsetsController(window, window.decorView)
         wcontroller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
@@ -64,10 +67,11 @@ class MainActivity : ComponentActivity() {
 
                     }
                     composable(PREGAME) {
-                        pregamescreen(goGame = {navController.navigate(GAME)})
+                        pregamescreen(goGame = {navController.navigate(GAME)},
+                            sharedPreferences )
                     }
                     composable(GAME) {
-                        gamescreen()
+                        gamescreen(sharedPreferences)
                     }
                 }
             }
