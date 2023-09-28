@@ -79,10 +79,10 @@ fun button_(
 }
 
 @Composable
-fun text(text: String, size: Int, modifier: Modifier = Modifier) {
+fun text(text: String, size: Int, modifier: Modifier = Modifier,color: Color = Color.White) {
     Text(text = text,
         fontSize = size.sp,
-        color = Color.White,
+        color = color,
         fontWeight = FontWeight.Bold,
         fontFamily = FontFamily(Font(R.font.poppins)),
         modifier = modifier)

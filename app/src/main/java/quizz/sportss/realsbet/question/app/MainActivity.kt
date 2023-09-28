@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import quizz.sportss.realsbet.question.app.ui.Privacy_screen
 import quizz.sportss.realsbet.question.app.ui.theme.SportsRealsbeTheme
 import quizz.sportss.realsbet.question.app.ui.theme.gamescreen
 import quizz.sportss.realsbet.question.app.ui.theme.homescreen
@@ -55,16 +56,14 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = HOMESCREEN) {
 
                     composable(HOMESCREEN) {
-                        homescreen(goPreGame = {navController.navigate(PREGAME)},
-                            goRules = {navController.navigate(RULES)},
-                            goPolicy = {navController.navigate(RULES)})
+                        homescreen(
+                            goPreGame = {navController.navigate(PREGAME){launchSingleTop=true} },
+                            goRules = {navController.navigate(RULES){launchSingleTop=true}},
+                            goPolicy = {navController.navigate(POLICY){launchSingleTop=true}},
+                            navController)
                     }
                     composable(POLICY) {
-
-                    }
-
-                    composable(RULES) {
-
+                        Privacy_screen()
                     }
                     composable(PREGAME) {
                         pregamescreen(goGame = {navController.navigate(GAME)},

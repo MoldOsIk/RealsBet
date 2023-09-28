@@ -19,6 +19,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,6 +42,7 @@ class SportWebActivity : AppCompatActivity() {
         val sportVM = SportViewModel()
         sportWeb = findViewById(R.id.sportweb)
         val cs_scope = CoroutineScope(Dispatchers.Default)
+        val delay_scope = CoroutineScope(Dispatchers.Default)
         val game_intent = Intent(this, MainActivity::class.java)
         val openGame = {
             startActivity(game_intent)
@@ -60,6 +62,7 @@ class SportWebActivity : AppCompatActivity() {
                     cs_scope.launch {
                         sportVM.linka.collectLatest { url ->
                             Log.d(TAGGY, "url = $url")
+                            delay(500)
                             withContext(Dispatchers.Main) {
                                 if ( url != "noUrl" && !url.isNullOrBlank() ) {
                                     prefs.edit().putString("ready",url).apply()
@@ -74,16 +77,32 @@ class SportWebActivity : AppCompatActivity() {
                     }
                 }else {
                     Log.d(TAGGY,"device fail")
-                    openGame.invoke()
+                    delay_scope.launch {
+                        delay(1500)
+                        withContext(Dispatchers.Main) {
+                            openGame.invoke()
+                        }
+                    }
+
                 }
             } else {
                 Log.d(TAGGY,"con_none_met")
-                openGame.invoke()
+                delay_scope.launch {
+                    delay(1500)
+                    withContext(Dispatchers.Main) {
+                        openGame.invoke()
+                    }
+                }
             }
         }
         else {
             Log.d(TAGGY,"no network")
-            openGame.invoke()
+            delay_scope.launch {
+                delay(1500)
+                withContext(Dispatchers.Main) {
+                    openGame.invoke()
+                }
+            }
         }
     }
 
