@@ -1,9 +1,13 @@
 package quizz.sportss.realsbet.question.app.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -13,8 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.CncBet.jogar.a123.ui.theme.porpg.button_
 import com.CncBet.jogar.a123.ui.theme.porpg.text
 import quizz.sportss.realsbet.question.app.R
@@ -121,7 +128,7 @@ fun gamescreen(topic: Int,
             listOf("a) Moscow", "b) Toronto", "c) New York"), "b) Toronto"),
 
         Question("What color is typically used for the hockey puck?",
-            listOf("a) White", "b) Black", "c) Red\n"), " b) Black"),
+            listOf("a) White", "b) Black", "c) Red"), "b) Black"),
 
         Question("What is the term for the action in which a hockey player" +
                 " tries to score by shooting the puck into the opponent's goal?",
@@ -140,8 +147,29 @@ fun gamescreen(topic: Int,
     val answersState = remember{
         mutableStateOf(0)
     }
+    val defColor = remember {
+        when(topic){
+            0-> Color(0xFF2867C7)
+            1-> Color(0xFFDBA24D)
+            else-> Color(0xFFB2D4E4)
+        }
 
-    Image(painter = painterResource(id = R.drawable.gamebg), contentDescription = "" ,
+    }
+
+    val coolback = remember {
+        Modifier
+            .background(color = defColor, shape = RoundedCornerShape(20))
+            .border(1.4.dp, black, shape = RoundedCornerShape(20))
+            .padding(horizontal = 16.dp)
+    }
+
+    Image(painter = painterResource(id =
+        when(topic){
+            0->R.drawable.football
+            1->R.drawable.backettopic
+            else->R.drawable.hockeytopic
+        }
+    ), contentDescription = "" ,
         modifier = Modifier.fillMaxSize(),
         contentScale = ContentScale.Crop)
 
@@ -154,7 +182,11 @@ fun gamescreen(topic: Int,
                 rightAnswer = questionsfootbal[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
                 goNext = { currentQuestionIndex++ },
-                goEnd = { EndGame(answersState.value) }
+                goEnd = {
+                    EndGame(answersState.value)
+
+                },indexOfQuestion = currentQuestionIndex,
+                topic = topic
             )
 
         }
@@ -171,7 +203,9 @@ fun gamescreen(topic: Int,
                 rightAnswer = questionsbasket[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
                 goNext = {currentQuestionIndex++},
-                goEnd = {EndGame(answersState.value)}
+                goEnd = { EndGame(answersState.value)
+                },indexOfQuestion = currentQuestionIndex,
+                topic = topic
             )
         } else {
             EndGame(answersState.value)
@@ -186,18 +220,20 @@ fun gamescreen(topic: Int,
                 rightAnswer = questionshockey[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
                 goNext = {currentQuestionIndex++},
-                goEnd = {EndGame(answersState.value)}
+                goEnd = { EndGame(answersState.value)
+                },indexOfQuestion = currentQuestionIndex,
+                topic = topic
             )
         } else {
             EndGame(answersState.value)
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize(),
+    Box(modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),
         contentAlignment = Alignment.BottomCenter)
     {
         button_(onClick = { goPreGame() }, modifier = Modifier.align(Alignment.BottomCenter)) {
-            text(text = "Back", size = 30)
+            text(text = "Back", size = 30,color = Black, modifier = Modifier.then(coolback))
         }
     }
 

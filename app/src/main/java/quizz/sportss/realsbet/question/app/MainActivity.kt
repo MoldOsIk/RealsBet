@@ -30,22 +30,21 @@ val ENDGAME = "endgame"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sharedPreferences = getSharedPreferences("1", Context.MODE_PRIVATE)
         val wcontroller = WindowCompat.getInsetsController(window, window.decorView)
         wcontroller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         wcontroller.hide(WindowInsetsCompat.Type.statusBars())
         wcontroller.hide(WindowInsetsCompat.Type.navigationBars())
         wcontroller.hide(WindowInsetsCompat.Type.displayCutout())
-        sharedPreferences.edit().putInt("balance",1000).apply()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             SportsRealsbeTheme {
-
-
                 val navController = rememberNavController()
                 val topice = remember{
                     mutableStateOf(0)
+                }
+                val balance = remember{
+                    mutableStateOf(1000)
                 }
                 val scoree = remember {
                     mutableStateOf(0)
@@ -71,10 +70,11 @@ class MainActivity : ComponentActivity() {
                             topice.value = topic
                             bete.value = bet
                             navController.navigate(GAME)},
+                            balance = balance.value
                             )
                     }
                     composable(GAME) {
-                        gamescreen(goPreGame = {navController.navigate(PREGAME)},
+                        gamescreen(goPreGame = {navController.navigate(PREGAME){launchSingleTop=true}},
                             topic = topice.value,
                             EndGame = {
                                 score->
@@ -85,7 +85,11 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(ENDGAME) {
                         EndGame(scoree.value, bete.value,
-                            goPreGame = {navController.navigate(PREGAME)}) }
+                            goPreGame = {
+                                navController.popBackStack()
+                                navController.popBackStack()
+                                    //navController.navigate(PREGAME){launchSingleTop=true}
+                                        },balance, topic = topice.value)}
                     }
                 }
             }

@@ -3,6 +3,12 @@ package quizz.sportss.realsbet.question.app.ui.theme
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -49,14 +56,13 @@ import quizz.sportss.realsbet.question.app.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
+fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
     val sharedPreferences = LocalContext.current.getSharedPreferences("1", Context.MODE_PRIVATE)
     val images = listOf(
         R.drawable.footbal,
         R.drawable.basketball,
         R.drawable.hockey
     )
-    val balance = sharedPreferences.getInt("balance", 0)
     val fullWidth = LocalConfiguration.current.screenWidthDp
     val fullHeight = LocalConfiguration.current.screenHeightDp
         val pagerState = rememberPagerState(pageCount = {
@@ -65,6 +71,19 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
     var bet by remember{
         mutableStateOf(0)
     }
+    val infiniteTransition = rememberInfiniteTransition()
+    val infiniteRepeatableSpec = remember {
+        InfiniteRepeatableSpec<Float>(
+            tween(2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    }
+    val scale = infiniteTransition.animateFloat(
+        initialValue = 0.95f,
+        targetValue = 1.05f,
+        animationSpec = infiniteRepeatableSpec,
+        label = ""
+    )
     Box(modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center)
     {
@@ -75,11 +94,14 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
             .align(Alignment.TopCenter)
             .padding(top = (fullHeight * 0.05).dp))
         {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                text("Your game points:",20)
-                text("${balance}",  20)
+            but_sport(onClick = {  }) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    text("Your game points:",20,color= black)
+                    text("${balance}",  20,color= black)
 
+                }
             }
+
 
         }
 
@@ -101,10 +123,17 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
 
 
         }
-        text( "Select the topic of the questions:",  20,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(bottom = (fullHeight * 0.4).dp))
+            text(
+                "Select the topic of the questions:", 20,
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .scale(scale.value)
+                    .padding(top = (fullHeight * 0.265).dp)
+                    .background(color = defSportColor, shape = RoundedCornerShape(20))
+                    .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 4.dp), black
+            )
         Box(modifier = Modifier.align(Alignment.BottomCenter) )
         {
             Column(
@@ -112,8 +141,18 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit ) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                text("Place you score:", 20)
-                text("${bet}", 20)
+                text("Place you score:", 20,color= black,
+                    modifier = Modifier
+                        .background(color = defSportColor, shape = RoundedCornerShape(20))
+                        .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 4.dp) )
+                text("${bet}", 20,color = black,
+                    modifier = Modifier
+                        .background(color = defSportColor, shape = RoundedCornerShape(20))
+                        .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 4.dp) )
                 SliderWithStep(
                     value = bet.toFloat(),
                     onValueChange = {

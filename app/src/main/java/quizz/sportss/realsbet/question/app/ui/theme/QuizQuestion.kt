@@ -53,6 +53,8 @@ fun QuizQuestion(
     goNext: (answersCount:Int) -> Unit,
     goEnd: (answersCount: Int) -> Unit,
     question: String,
+    indexOfQuestion:Int,
+    topic : Int
 )
 {
 
@@ -63,6 +65,8 @@ fun QuizQuestion(
         Column(
             Modifier
                 .fillMaxSize()
+            ,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
 
         ) {
 
@@ -72,38 +76,46 @@ fun QuizQuestion(
             val rightAnswerNumber = remember(key.value) {
                 answers.indexOf(rightAnswer)+1
             }
+            val defColor = remember {
+            when(topic){
+                0->Color(0xFF2867C7)
+                1->Color(0xFFDBA24D)
+                else->Color(0xFFB2D4E4)
+            }
+
+        }
             val selectedAnswer = remember(key.value) { mutableStateOf<Int?>(null) }
             val selectionEnabled = remember(key.value) { mutableStateOf(true) }
             val millisecondsLast = remember(key.value){ Animatable(60000f) }
-
-            val questionNumber = remember {
-                mutableStateOf(0)
+            val coolback = remember {
+                Modifier
+                    .background(color = defColor, shape = RoundedCornerShape(20))
+                    .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                    .padding(horizontal = 16.dp)
             }
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(top = 16.dp)
                     .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp)
-                    .fillMaxWidth()
+
+
+
                 ,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+
                 Text(
-                    text = "Level 1",
-                    modifier = Modifier,
-                    color = secondary,
-                    fontSize = 22.sp
-                )
-                Text(
-                    text = "${questionNumber.value}/10",
-                    color = green,
-                    fontSize = 38.sp
+                    text = "${indexOfQuestion}/10",
+                    color = black,
+                    fontSize = 38.sp,
+                    modifier =    Modifier.then(coolback)
                 )
             }
             LaunchedEffect(key.value){
                 millisecondsLast.animateTo(0f, tween(10000, easing = LinearEasing))
                 goEnd.invoke(answersState.value)
             }
+
 
             LaunchedEffect(key1 = selectedAnswer.value){
                 delay(2000)
@@ -128,19 +140,23 @@ fun QuizQuestion(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
-                        .height(10.dp)
+                        .height(12.dp)
                         .clip(
                             RoundedCornerShape(40)
                         ),
-                    color = green, trackColor = Color.White
+                    color = defColor, trackColor = Color.White
                 )
 
             }
 
 
-            LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+            LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 item {
-                    Text(text = question, fontSize = 18.sp, color = secondary,modifier = Modifier.padding(vertical =  16.dp))
+                    Text(text = question, fontSize = 18.sp, color = black,modifier = Modifier
+                        .background(color = defColor, shape = RoundedCornerShape(20))
+                        .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                        .padding(horizontal =  16.dp, vertical = 8.dp))
                 }
                 items(answers.size) { index ->
                     val answer = answers[index]
@@ -165,7 +181,7 @@ fun QuizQuestion(
                             selectedAnswer.value = index
                         }
                     }, textColor = textColor, answer = answer , boxColor =boxColor )
-                    Spacer(modifier = Modifier.height(16.dp))
+
                 }
             }
         }
