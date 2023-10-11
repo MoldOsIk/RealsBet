@@ -23,7 +23,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
-    secondary = lightSportColor,
+    secondary = defBasketLightColor,
     tertiary = Pink40
 
     /* Other default colors to override

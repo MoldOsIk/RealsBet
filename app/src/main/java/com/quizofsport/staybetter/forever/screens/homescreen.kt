@@ -21,6 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -36,10 +37,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +57,7 @@ import kotlinx.coroutines.launch
 import com.quizofsport.staybetter.forever.common.but_sport
 import com.quizofsport.staybetter.forever.common.text
 import com.quizofsport.staybetter.forever.ui.theme.black
+import com.quizofsport.staybetter.forever.ui.theme.metal
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -88,10 +93,12 @@ fun homescreen(goPreGame:() -> Unit, goRules:() -> Unit, goPolicy:() -> Unit,nav
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop)
         Box(Modifier.fillMaxSize()) {
-        Text(text = stringResource(id = R.string.app_name), fontSize = 32.sp,color = Color.White,
-            fontWeight = FontWeight.Bold, letterSpacing = 2.3.sp,modifier =
-            Modifier.align(Alignment.TopCenter).padding(top = 8.dp),
-            
+        Text(text = stringResource(id = R.string.app_name), fontSize = 32.sp,color = metal,
+            fontWeight = FontWeight.Bold, letterSpacing = 3.2.sp,modifier =
+            Modifier.align(Alignment.TopCenter).padding(top = 8.dp).graphicsLayer { rotationX = -25f
+            },
+            lineHeight = 26.sp,
+            fontFamily = FontFamily(Font(R.font.poppins))
             )
         AnimatedVisibility(
             visible = showMenu.value,
@@ -100,14 +107,15 @@ fun homescreen(goPreGame:() -> Unit, goRules:() -> Unit, goPolicy:() -> Unit,nav
             modifier  = Modifier
                 .align(BiasAlignment(horAlignment.value, -1f))
                 .padding(16.dp)
-                .padding(top = smooth.value.dp + 48.dp)
+                .padding(top = smooth.value.dp)
 
             ) {
             LazyColumn(horizontalAlignment = BiasAlignment.Horizontal(horAlignment.value),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(top = 48.dp)
             ){
-                item("START GAME") {
+                item("START GAME"){
                     AnimatedVisibility(visible =  !showRules.value ,
                         enter = fadeIn(tween(450))+ slideInVertically(tween(450)) { -(it*1.1).toInt() },
                         exit = fadeOut(tween(450))+slideOutVertically(tween(450)) {-(it*1.1).toInt()},

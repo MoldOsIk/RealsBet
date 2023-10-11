@@ -17,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.layout.ContentScale
@@ -26,22 +27,33 @@ import com.quizofsport.staybetter.forever.R
 import com.quizofsport.staybetter.forever.common.button_
 import com.quizofsport.staybetter.forever.common.text
 import com.quizofsport.staybetter.forever.ui.theme.black
+import com.quizofsport.staybetter.forever.ui.theme.defBasketLightColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
+import com.quizofsport.staybetter.forever.ui.theme.defFootballLightColor
+import com.quizofsport.staybetter.forever.ui.theme.defFootballMainColor
+import com.quizofsport.staybetter.forever.ui.theme.defHockeyLightColor
+import com.quizofsport.staybetter.forever.ui.theme.defHockeyMainColor
 
 @Composable
 fun EndGame(score: Int, bet: Int, goPreGame:()-> Unit ,balance:MutableState<Int>, topic : Int) {
 
-    val defColor = remember {
-        when(topic){
-            0-> Color(0xFF2867C7)
-            1-> Color(0xFFDBA24D)
-            else-> Color(0xFFB2D4E4)
+    val lightColor = remember {
+        when (topic) {
+            0 -> defFootballLightColor
+            1 -> defBasketLightColor
+            else -> defHockeyLightColor
         }
-
     }
-
+    val defColor = remember {
+        when (topic) {
+            0 -> defFootballMainColor
+            1 -> defBasketMainColor
+            else -> defHockeyMainColor
+        }
+    }
     val coolback = remember {
         Modifier
-            .background(color = defColor, shape = RoundedCornerShape(20))
+            .background(brush = Brush.verticalGradient(listOf(lightColor,defColor)), shape = RoundedCornerShape(20))
             .border(1.4.dp, black, shape = RoundedCornerShape(20))
             .padding(horizontal = 16.dp)
     }
