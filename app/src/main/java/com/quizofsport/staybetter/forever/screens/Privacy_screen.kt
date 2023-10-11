@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.quizofsport.staybetter.forever.R
 import com.quizofsport.staybetter.forever.common.text
 import com.quizofsport.staybetter.forever.ui.theme.black
-import com.quizofsport.staybetter.forever.ui.theme.defSportColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
 
 @Composable
 fun Privacy_screen() {
@@ -38,7 +38,7 @@ fun Privacy_screen() {
         )
         Column(modifier = Modifier
             .padding(horizontal = 32.dp, vertical = 64.dp)
-            .background(color = defSportColor, shape = RoundedCornerShape(10))
+            .background(color = defBasketMainColor, shape = RoundedCornerShape(10))
             .border(1.4.dp, black, shape = RoundedCornerShape(10))
             .padding(16.dp)
             .verticalScroll(

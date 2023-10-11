@@ -41,7 +41,7 @@ fun SplashScreen(goForward:()->Unit) {
 
         Text(text = stringResource(id = R.string.loading),modifier = Modifier
             .align(Alignment.BottomCenter)
-            .padding(bottom =  48.dp, end = 40.dp),color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+            .padding(bottom =  48.dp, end = 48.dp),color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
         AndroidView(factory = {
             val lottie = LottieAnimationView(it)
             lottie.apply {
@@ -56,7 +56,7 @@ fun SplashScreen(goForward:()->Unit) {
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
-                .offset(64.dp, 0.dp)
+                .offset(68.dp, 0.dp)
                 .size(144.dp, 168.dp)
         )
 

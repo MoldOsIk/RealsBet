@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                     composable(GAME) {
                         gamescreen(goPreGame = {navController.navigate(PREGAME){launchSingleTop=true}},
                             topic = topice.value,
-                            EndGame = {
+                            endGame = {
                                 score->
                                 scoree.value = score
                                 navController.navigate(ENDGAME)
@@ -90,8 +90,7 @@ class MainActivity : ComponentActivity() {
                     composable(ENDGAME) {
                         EndGame(scoree.value, bete.value,
                             goPreGame = {
-                                navController.popBackStack()
-                                navController.popBackStack()
+                                navController.popBackStack(PREGAME, inclusive = false)
                                     //navController.navigate(PREGAME){launchSingleTop=true}
                                         },balance, topic = topice.value)
                     }

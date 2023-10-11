@@ -1,6 +1,5 @@
 package com.quizofsport.staybetter.forever.common
 
-import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -16,18 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.LinearGradient
-import androidx.compose.ui.graphics.LinearGradientShader
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.quizofsport.staybetter.forever.ui.theme.black
-import com.quizofsport.staybetter.forever.ui.theme.defSportColor
-import com.quizofsport.staybetter.forever.ui.theme.lightSportColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketLightColor
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -36,6 +31,8 @@ fun but_sport(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     all: Dp = 0.dp,
+    defCr: Color = defBasketLightColor,
+    lightCr:Color = defBasketMainColor,
     content: @Composable () -> Unit
 ) {
     val che_nigga = remember { Animatable(1f) }
@@ -44,7 +41,7 @@ fun but_sport(
         modifier = Modifier
             .then(modifier)
             .scale(che_nigga.value)
-            .background(brush = Brush.verticalGradient(listOf(lightSportColor, defSportColor)
+            .background(brush = Brush.verticalGradient(listOf(defCr, lightCr)
             ), shape = RoundedCornerShape(20))
             .border(1.4.dp, black,shape = RoundedCornerShape(20))
             .padding(horizontal =  16.dp).padding( top = 4.dp).padding(all)

@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.quizofsport.staybetter.forever.R
 import com.quizofsport.staybetter.forever.ui.theme.black
-import com.quizofsport.staybetter.forever.ui.theme.defSportColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -106,7 +106,7 @@ fun SliderWithStep(
             steps = ((maxValue - minValue) / step).roundToInt(),
             colors = SliderDefaults.colors(
                 thumbColor = Color.White,
-                activeTrackColor = defSportColor,
+                activeTrackColor = defBasketMainColor,
                 activeTickColor = black
             )
         )

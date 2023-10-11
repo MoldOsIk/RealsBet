@@ -39,7 +39,7 @@ import com.quizofsport.staybetter.forever.common.but_sport
 import com.quizofsport.staybetter.forever.common.button_
 import com.quizofsport.staybetter.forever.common.text
 import com.quizofsport.staybetter.forever.ui.theme.black
-import com.quizofsport.staybetter.forever.ui.theme.defSportColor
+import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -123,7 +123,7 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
                     .align(Alignment.TopCenter)
                     .scale(scaleMediumText.value)
                     .padding(top = (fullHeight * 0.215).dp)
-                    .background(color = defSportColor, shape = RoundedCornerShape(20))
+                    .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
                     .border(1.4.dp, black, shape = RoundedCornerShape(20))
                     .padding(horizontal = 16.dp)
                     .padding(top = 4.dp), black
@@ -137,13 +137,13 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
 
                 text("Place you score:", 20,color= black,
                     modifier = Modifier
-                        .background(color = defSportColor, shape = RoundedCornerShape(20))
+                        .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
                         .border(1.4.dp, black, shape = RoundedCornerShape(20))
                         .padding(horizontal = 16.dp)
                         .padding(top = 4.dp) )
                 text("${bet}", 20,color = black,
                     modifier = Modifier
-                        .background(color = defSportColor, shape = RoundedCornerShape(20))
+                        .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
                         .border(1.4.dp, black, shape = RoundedCornerShape(20))
                         .padding(horizontal = 16.dp)
                         .padding(top = 4.dp) )

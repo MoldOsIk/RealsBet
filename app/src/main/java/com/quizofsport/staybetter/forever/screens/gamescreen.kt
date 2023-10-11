@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.layout.ContentScale
@@ -29,15 +30,8 @@ import com.quizofsport.staybetter.forever.ui.theme.black
 
 fun gamescreen(topic: Int,
                goPreGame:() -> Unit,
-               EndGame:(score:Int)-> Unit, ){
-
+               endGame:(score:Int)-> Unit, ){
     var currentQuestionIndex by remember { mutableStateOf(0) }
-    var correctAnswers by remember { mutableStateOf(0) }
-    val imagePainterList = listOf(
-        painterResource(id = R.drawable.basketball),
-        painterResource(id = R.drawable.footbal),
-        painterResource(id = R.drawable.hockey)
-    )
     val questionsbasket = remember{listOf(
 
         Question("What is the diameter of a basketball hoop?",
@@ -147,6 +141,13 @@ fun gamescreen(topic: Int,
     val answersState = remember{
         mutableStateOf(0)
     }
+    val lightColor = remember {
+        when (topic) {
+            0 -> Color(0xFF6691D1)
+            1 -> Color(0xFFE4BD84)
+            else -> Color(0xFFC4DFEC)
+        }
+    }
     val defColor = remember {
         when(topic){
             0-> Color(0xFF2867C7)
@@ -158,7 +159,7 @@ fun gamescreen(topic: Int,
 
     val coolback = remember {
         Modifier
-            .background(color = defColor, shape = RoundedCornerShape(20))
+            .background(brush = Brush.verticalGradient(listOf(lightColor,defColor)), shape = RoundedCornerShape(20))
             .border(1.4.dp, black, shape = RoundedCornerShape(20))
             .padding(horizontal = 16.dp)
     }
@@ -183,14 +184,14 @@ fun gamescreen(topic: Int,
                 answersState = answersState,
                 goNext = { currentQuestionIndex++ },
                 goEnd = {
-                    EndGame(answersState.value)
+                    endGame(answersState.value)
 
                 },indexOfQuestion = currentQuestionIndex,
                 topic = topic
             )
 
         }
-        else EndGame(answersState.value)
+        else endGame(answersState.value)
 
     }
 
@@ -203,12 +204,12 @@ fun gamescreen(topic: Int,
                 rightAnswer = questionsbasket[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
                 goNext = {currentQuestionIndex++},
-                goEnd = { EndGame(answersState.value)
+                goEnd = { endGame(answersState.value)
                 },indexOfQuestion = currentQuestionIndex,
                 topic = topic
             )
         } else {
-            EndGame(answersState.value)
+            endGame(answersState.value)
         }
     }
     if(topic == 2)
@@ -220,12 +221,12 @@ fun gamescreen(topic: Int,
                 rightAnswer = questionshockey[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
                 goNext = {currentQuestionIndex++},
-                goEnd = { EndGame(answersState.value)
+                goEnd = { endGame(answersState.value)
                 },indexOfQuestion = currentQuestionIndex,
                 topic = topic
             )
         } else {
-            EndGame(answersState.value)
+            endGame(answersState.value)
         }
     }
 
