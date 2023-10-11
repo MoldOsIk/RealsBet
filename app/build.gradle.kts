@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "quizz.sportss.realsbet.question.app"
+    namespace = "com.quizofsport.staybetter.forever"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "quizz.sportss.realsbet.question.app"
+        applicationId = "com.quizofsport.staybetter.forever"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

@@ -1,26 +1,36 @@
 {
   "project_info": {
-    "project_number": "891700911036",
-    "project_id": "rgfdsa",
-    "storage_bucket": "rgfdsa.appspot.com"
+    "project_number": "176648632264",
+    "project_id": "graduation2-d1d76",
+    "storage_bucket": "graduation2-d1d76.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:891700911036:android:e61c9b346446b50fb9e9b9",
+        "mobilesdk_app_id": "1:176648632264:android:e26c7b9770dc747308b2fd",
         "android_client_info": {
-          "package_name": "quizz.sportss.realsbet.question.app"
+          "package_name": "com.quizofsport.staybetter.forever"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "176648632264-ms9k702v9fj1fe8142qqsa7q6ln0e5oc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDfinhyQ42spnGGRAjaw8jIgBOk0mCN8xA"
+          "current_key": "AIzaSyDkz8YvJn4nxl9_9Iu5aka3wtklN90n45Y"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "176648632264-ms9k702v9fj1fe8142qqsa7q6ln0e5oc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
