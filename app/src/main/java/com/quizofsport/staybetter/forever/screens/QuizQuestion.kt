@@ -23,17 +23,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.quizofsport.staybetter.forever.R
 import com.quizofsport.staybetter.forever.common.but_sport
-import com.quizofsport.staybetter.forever.common.button_
 import com.quizofsport.staybetter.forever.ui.theme.background
 import com.quizofsport.staybetter.forever.ui.theme.black
 import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
@@ -44,9 +46,9 @@ import com.quizofsport.staybetter.forever.ui.theme.defFootballMainColor
 import com.quizofsport.staybetter.forever.ui.theme.defHockeyLightColor
 import com.quizofsport.staybetter.forever.ui.theme.defHockeyMainColor
 import com.quizofsport.staybetter.forever.ui.theme.red
-import com.quizofsport.staybetter.forever.ui.theme.secondary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -54,21 +56,19 @@ fun QuizQuestion(
     answers: List<String>,
     rightAnswer: String,
     answersState: MutableState<Int>,
-    goNext: (answersCount:Int) -> Unit,
+    goNext: (answersCount: Int) -> Unit,
     goEnd: (answersCount: Int) -> Unit,
     question: String,
-    indexOfQuestion:Int,
-    topic : Int
-)
-{
+    indexOfQuestion: Int,
+    topic: Int
+) {
     Box(
         Modifier
             .fillMaxSize(), contentAlignment = Alignment.Center
     ) {
         Column(
             Modifier
-                .fillMaxSize()
-            ,
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
 
         ) {
@@ -77,7 +77,7 @@ fun QuizQuestion(
                 mutableStateOf(0)
             }
             val rightAnswerNumber = remember(key.value) {
-                answers.indexOf(rightAnswer)+1
+                answers.indexOf(rightAnswer) + 1
             }
             val lightColor = remember {
                 when (topic) {
@@ -87,20 +87,21 @@ fun QuizQuestion(
                 }
             }
             val defColor = remember {
-            when(topic){
-                0-> defFootballMainColor
-                1-> defBasketMainColor
-                else-> defHockeyMainColor
-            }
+                when (topic) {
+                    0 -> defFootballMainColor
+                    1 -> defBasketMainColor
+                    else -> defHockeyMainColor
+                }
 
-        }
+            }
+            val scope = rememberCoroutineScope()
             val selectedAnswer = remember(key.value) { mutableStateOf<Int?>(null) }
             val selectionEnabled = remember(key.value) { mutableStateOf(true) }
-            val millisecondsLast = remember(key.value){ Animatable(60000f) }
-            val coolback = remember {
+            val millisecondsLast = remember(key.value) { Animatable(60000f) }
+            val coolBack = remember {
                 Modifier
                     .background(
-                        brush = Brush.verticalGradient(listOf(lightColor, defColor)),
+                        brush = Brush.verticalGradient(listOf(defColor, lightColor)),
                         shape = RoundedCornerShape(20)
                     )
                     .border(1.4.dp, black, shape = RoundedCornerShape(20))
@@ -110,11 +111,7 @@ fun QuizQuestion(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .padding(horizontal = 16.dp)
-
-
-
-                ,
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
 
@@ -122,35 +119,40 @@ fun QuizQuestion(
                     text = "${indexOfQuestion}/10",
                     color = black,
                     fontSize = 38.sp,
-                    modifier =    Modifier.then(coolback)
+                    modifier = Modifier.then(coolBack)
                 )
             }
-            LaunchedEffect(key.value){
+            LaunchedEffect(key.value) {
                 millisecondsLast.animateTo(0f, tween(10000, easing = LinearEasing))
+                if(millisecondsLast.value == 0f)
                 goEnd.invoke(answersState.value)
             }
 
 
-            LaunchedEffect(key1 = selectedAnswer.value){
+            LaunchedEffect(key1 = selectedAnswer.value) {
                 delay(2000)
-                if(selectedAnswer.value!=null){
+                if (selectedAnswer.value != null) {
 
                     selectionEnabled.value = false
+                    if (selectedAnswer.value == rightAnswerNumber - 1)
+                        answersState.value++
+
                     delay(2000)
-                    withContext(Dispatchers.Main){
-                        if(selectedAnswer.value == rightAnswerNumber-1)
-                            answersState.value++
+                    withContext(Dispatchers.Main) {
+
                         goNext.invoke(answersState.value)
-                        key.value ++
+                        key.value++
                     }
 
                 }
             }
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start) {
+            Row(
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
                 LinearProgressIndicator(
-                    progress = millisecondsLast.value/60000f,
+                    progress = millisecondsLast.value / 60000f,
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .fillMaxWidth()
@@ -163,17 +165,21 @@ fun QuizQuestion(
 
             }
 
-            LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+            LazyColumn(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 item {
-                    Text(text = question, fontSize = 18.sp, color = black,modifier = Modifier
-                        .background(
-                            brush = Brush.verticalGradient(listOf(lightColor, defColor)),
-                            shape = RoundedCornerShape(20)
-                        )
-                        .border(1.4.dp, black, shape = RoundedCornerShape(20))
-                        .padding(horizontal = 16.dp, vertical = 8.dp))
+                    Text(
+                        text = question, fontSize = 18.sp, color = black, modifier = Modifier
+                            .background(
+                                brush = Brush.verticalGradient(listOf(defColor, lightColor)),
+                                shape = RoundedCornerShape(20)
+                            )
+                            .border(1.4.dp, black, shape = RoundedCornerShape(20))
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
                 items(answers.size) { index ->
                     val answer = answers[index]
@@ -181,40 +187,51 @@ fun QuizQuestion(
                     val boxColor = when {
 
 
-                        selectedAnswer.value == rightAnswerNumber -1 && rightAnswerNumber -1 == index && !selectionEnabled.value -> green
-                        index == rightAnswerNumber-1 && !selectionEnabled.value -> green
-                        selectedAnswer.value == index && rightAnswerNumber - 1 != index  && !selectionEnabled.value -> red
+                        selectedAnswer.value == rightAnswerNumber - 1 && rightAnswerNumber - 1 == index && !selectionEnabled.value -> green
+                        index == rightAnswerNumber - 1 && !selectionEnabled.value -> green
+                        selectedAnswer.value == index && rightAnswerNumber - 1 != index && !selectionEnabled.value -> red
                         selectedAnswer.value == index -> defColor
                         else -> background
                     }
 
                     val textColor = when {
                         selectedAnswer.value == index -> background
-                        rightAnswerNumber - 1  == index && !selectionEnabled.value -> background
+                        rightAnswerNumber - 1 == index && !selectionEnabled.value -> background
                         else -> black
                     }
                     Note(onClick = {
-                        if(selectionEnabled.value) {
+                        if (selectionEnabled.value) {
                             selectedAnswer.value = index
                         }
-                    }, textColor = textColor, answer = answer , boxColor = boxColor )
+                    }, textColor = textColor, answer = answer, boxColor = boxColor)
 
                 }
                 item {
-                    but_sport(onClick = { goNext.invoke(answersState.value) },
+                    but_sport(
+                        onClick = {
+                            scope.launch { millisecondsLast.snapTo(60000f) }
+                            scope.launch { key.value++ }
+                            goNext.invoke(answersState.value)
+                        },
                         lightCr = lightColor,
                         defCr = defColor,
-                        ) {
-                        Text(text = stringResource(id = R.string.skip), fontSize = 28.sp,color = black,
-                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.skip),
+                            fontSize = 24.sp,
+                            color = black,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                            fontFamily = FontFamily(Font(R.font.poppins))
+                        )
                     }
                 }
             }
         }
     }
 }
+
 @Composable
-fun Note(onClick:()->Unit,textColor:Color, answer: String,boxColor: Color){
+fun Note(onClick: () -> Unit, textColor: Color, answer: String, boxColor: Color) {
     Box(
         modifier = Modifier
 

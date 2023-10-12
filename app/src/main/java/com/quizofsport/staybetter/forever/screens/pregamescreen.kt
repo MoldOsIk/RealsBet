@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -39,12 +40,12 @@ import com.quizofsport.staybetter.forever.common.but_sport
 import com.quizofsport.staybetter.forever.common.button_
 import com.quizofsport.staybetter.forever.common.text
 import com.quizofsport.staybetter.forever.ui.theme.black
+import com.quizofsport.staybetter.forever.ui.theme.defBasketLightColor
 import com.quizofsport.staybetter.forever.ui.theme.defBasketMainColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
-    val sharedPreferences = LocalContext.current.getSharedPreferences("1", Context.MODE_PRIVATE)
     val images = listOf(
         R.drawable.footbal,
         R.drawable.basketball,
@@ -123,10 +124,10 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
                     .align(Alignment.TopCenter)
                     .scale(scaleMediumText.value)
                     .padding(top = (fullHeight * 0.215).dp)
-                    .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
-                    .border(1.4.dp, black, shape = RoundedCornerShape(20))
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 4.dp), black
+                    .background(brush = Brush.verticalGradient(listOf(defBasketMainColor, defBasketLightColor)
+                    ), shape = RoundedCornerShape(20))
+                    .border(1.4.dp, black,shape = RoundedCornerShape(20))
+                    .padding(horizontal =  16.dp).padding( top = 4.dp), black
             )
         Box(modifier = Modifier.align(Alignment.BottomCenter).scale(scaleTopBox.value) )
         {
@@ -137,13 +138,13 @@ fun pregamescreen(goGame:(topic: Int, bet:Int) -> Unit,balance:Int ) {
 
                 text("Place you score:", 20,color= black,
                     modifier = Modifier
-                        .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
+                        .background(brush = Brush.verticalGradient(listOf(defBasketMainColor, defBasketLightColor)), shape = RoundedCornerShape(20))
                         .border(1.4.dp, black, shape = RoundedCornerShape(20))
                         .padding(horizontal = 16.dp)
                         .padding(top = 4.dp) )
                 text("${bet}", 20,color = black,
                     modifier = Modifier
-                        .background(color = defBasketMainColor, shape = RoundedCornerShape(20))
+                        .background(brush = Brush.verticalGradient(listOf(defBasketMainColor, defBasketLightColor)), shape = RoundedCornerShape(20))
                         .border(1.4.dp, black, shape = RoundedCornerShape(20))
                         .padding(horizontal = 16.dp)
                         .padding(top = 4.dp) )

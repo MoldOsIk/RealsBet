@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sport Race</string>
-    <string name="privacy">Need add</string>
     <string name="rules">You can choose 1 of 3 sports. You will be asked 10 questions and given the opportunity to bet on your success. If there are fewer correctly guessed answers than you expected, then you will lose. If you answer the same number or more answers that you specified, you will win.</string>
     <string name="loading">Loading...</string>
     <string name="skip">Skip</string>
+
 </resources>

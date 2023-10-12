@@ -31,8 +31,8 @@ fun but_sport(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     all: Dp = 0.dp,
-    defCr: Color = defBasketLightColor,
-    lightCr:Color = defBasketMainColor,
+    defCr: Color = defBasketMainColor,
+    lightCr:Color = defBasketLightColor,
     content: @Composable () -> Unit
 ) {
     val che_nigga = remember { Animatable(1f) }
@@ -45,7 +45,6 @@ fun but_sport(
             ), shape = RoundedCornerShape(20))
             .border(1.4.dp, black,shape = RoundedCornerShape(20))
             .padding(horizontal =  16.dp).padding( top = 4.dp).padding(all)
-
             .pointerInteropFilter{
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {

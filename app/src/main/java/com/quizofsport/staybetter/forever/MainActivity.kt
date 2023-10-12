@@ -12,7 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.quizofsport.staybetter.forever.screens.EndGame
-import com.quizofsport.staybetter.forever.screens.Privacy_screen
 import com.quizofsport.staybetter.forever.screens.SplashScreen
 import com.quizofsport.staybetter.forever.screens.gamescreen
 import com.quizofsport.staybetter.forever.screens.homescreen
@@ -22,7 +21,6 @@ import com.quizofsport.staybetter.forever.ui.theme.SportsRealsbeTheme
 val SPLASH = "SPLASH"
 val HOMESCREEN = "homescreen"
 val RULES = "rules"
-val POLICY = "policy"
 val GAME = "game"
 val PREGAME = "pregame"
 val ENDGAME = "endgame"
@@ -61,19 +59,14 @@ class MainActivity : ComponentActivity() {
                     composable(HOMESCREEN) {
                         homescreen(
                             goPreGame = {navController.navigate(PREGAME){launchSingleTop=true} },
-                            goRules = {navController.navigate(RULES){launchSingleTop=true}},
-                            goPolicy = {navController.navigate(POLICY){launchSingleTop=true}},
-                            navController)
-                    }
-                    composable(POLICY) {
-                        Privacy_screen()
+                            navController =navController)
                     }
                     composable(PREGAME) {
                         pregamescreen(goGame = {
                             topic,bet ->
                             topice.value = topic
                             bete.value = bet
-                            navController.navigate(GAME)},
+                            navController.navigate(GAME){launchSingleTop=true}},
                             balance = balance.value
                             )
                     }
@@ -83,7 +76,7 @@ class MainActivity : ComponentActivity() {
                             endGame = {
                                 score->
                                 scoree.value = score
-                                navController.navigate(ENDGAME)
+                                navController.navigate(ENDGAME){launchSingleTop}
                                       },
                             )
                     }
@@ -91,7 +84,6 @@ class MainActivity : ComponentActivity() {
                         EndGame(scoree.value, bete.value,
                             goPreGame = {
                                 navController.popBackStack(PREGAME, inclusive = false)
-                                    //navController.navigate(PREGAME){launchSingleTop=true}
                                         },balance, topic = topice.value)
                     }
                     }

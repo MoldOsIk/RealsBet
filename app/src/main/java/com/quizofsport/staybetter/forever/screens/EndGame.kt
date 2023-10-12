@@ -53,7 +53,8 @@ fun EndGame(score: Int, bet: Int, goPreGame:()-> Unit ,balance:MutableState<Int>
     }
     val coolback = remember {
         Modifier
-            .background(brush = Brush.verticalGradient(listOf(lightColor,defColor)), shape = RoundedCornerShape(20))
+            .background(brush = Brush.verticalGradient(listOf(defColor,lightColor)),
+                shape = RoundedCornerShape(20))
             .border(1.4.dp, black, shape = RoundedCornerShape(20))
             .padding(horizontal = 16.dp)
     }
@@ -61,10 +62,10 @@ fun EndGame(score: Int, bet: Int, goPreGame:()-> Unit ,balance:MutableState<Int>
     val newMoney = remember {
         mutableStateOf(0)
     }
-    Log.d("guyt6hu","$bet $score $balance")
-    LaunchedEffect(key1 = Unit){
+    LaunchedEffect(key1 = topic.hashCode()){
         if(bet<=score && score!=0) {
             newMoney.value=200*(score-bet+1)
+            Log.d(  "jsaifjisafi", "UPDATE BALANCE!!!")
             balance.value+=newMoney.value
         }
     }
@@ -81,16 +82,16 @@ fun EndGame(score: Int, bet: Int, goPreGame:()-> Unit ,balance:MutableState<Int>
         ), contentDescription = "" ,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop)
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier =    Modifier.then(coolback)) {
-            text(text = "You scored:", size = 35, color = Black)
-            text(text = "$score/10", 30, color = Black)
-            text(text = "Your predict was:", 35, color = Black)
-            text(text = "${bet}/10", 35, color = Black)
-            text("You won", 35, color = Black)
-            text("${newMoney.value}", 35, color = Black)
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier =    Modifier.then(coolback).padding(16.dp)) {
+            text(text = "You scored:", size = 28, color = Black)
+            text(text = "$score/10", 26, color = Black)
+            text(text = "Your predict was:", 28, color = Black)
+            text(text = "${bet}/10", 26, color = Black)
+            text("You won:", 28, color = Black)
+            text("${newMoney.value}", 26, color = Black)
         }
         button_(onClick = { goPreGame() }, modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 16.dp)) {
-            text(text = "Back", size = 30, color = Black, modifier = Modifier.then(coolback))
+            text(text = "Back", size = 24, color = Black, modifier = Modifier.then(coolback))
         }
 
     }

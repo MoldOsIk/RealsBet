@@ -24,6 +24,7 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.quizofsport.staybetter.forever.R
@@ -72,13 +73,17 @@ fun button_(
 }
 
 @Composable
-fun text(text: String, size: Int, modifier: Modifier = Modifier,color: Color = Color.White) {
+fun text(text: String, size: Int, modifier: Modifier = Modifier,
+         color: Color = Color.White,fontWeight: FontWeight? = FontWeight.Bold,
+         textAlign: TextAlign? = TextAlign.Start
+) {
     Text(text = text,
         fontSize = size.sp,
         color = color,
-        fontWeight = FontWeight.Bold,
+        fontWeight = fontWeight,
         fontFamily = FontFamily(Font(R.font.poppins)),
-        modifier = modifier)
+        modifier = modifier,
+        textAlign = textAlign)
 }
 
 @Composable

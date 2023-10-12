@@ -159,7 +159,7 @@ fun gamescreen(topic: Int,
 
     val coolback = remember {
         Modifier
-            .background(brush = Brush.verticalGradient(listOf(lightColor,defColor)), shape = RoundedCornerShape(20))
+            .background(brush = Brush.verticalGradient(listOf(defColor,lightColor)), shape = RoundedCornerShape(20))
             .border(1.4.dp, black, shape = RoundedCornerShape(20))
             .padding(horizontal = 16.dp)
     }
@@ -176,13 +176,18 @@ fun gamescreen(topic: Int,
 
     if(topic == 0)
     {
-        if (currentQuestionIndex < questionsbasket.size) {
             QuizQuestion(
                 question = questionsfootbal[currentQuestionIndex].text,
                 answers = questionsfootbal[currentQuestionIndex].options,
                 rightAnswer = questionsfootbal[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
-                goNext = { currentQuestionIndex++ },
+                goNext = {
+                    if(currentQuestionIndex==9)
+                        endGame(answersState.value)
+                    else
+                    currentQuestionIndex++
+                         }
+                ,
                 goEnd = {
                     endGame(answersState.value)
 
@@ -190,44 +195,45 @@ fun gamescreen(topic: Int,
                 topic = topic
             )
 
-        }
-        else endGame(answersState.value)
 
     }
 
     if(topic == 1)
     {
-        if (currentQuestionIndex < questionsbasket.size) {
             QuizQuestion(
                 question = questionsbasket[currentQuestionIndex].text,
                 answers = questionsbasket[currentQuestionIndex].options,
                 rightAnswer = questionsbasket[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
-                goNext = {currentQuestionIndex++},
+                goNext = {
+                    if(currentQuestionIndex==9)
+                    endGame(answersState.value)
+                    else
+                    currentQuestionIndex++ },
                 goEnd = { endGame(answersState.value)
                 },indexOfQuestion = currentQuestionIndex,
                 topic = topic
             )
-        } else {
-            endGame(answersState.value)
-        }
     }
     if(topic == 2)
     {
-        if (currentQuestionIndex < questionshockey.size) {
             QuizQuestion(
                 question = questionshockey[currentQuestionIndex].text,
                 answers = questionshockey[currentQuestionIndex].options,
                 rightAnswer = questionshockey[currentQuestionIndex].correctAnswer,
                 answersState = answersState,
-                goNext = {currentQuestionIndex++},
-                goEnd = { endGame(answersState.value)
+                goNext = {
+                    if(currentQuestionIndex==9)
+                    endGame(answersState.value)
+                else
+                    currentQuestionIndex++
+                         },
+                goEnd = {
+                    endGame(answersState.value)
                 },indexOfQuestion = currentQuestionIndex,
                 topic = topic
             )
-        } else {
-            endGame(answersState.value)
-        }
+
     }
 
     Box(modifier = Modifier.fillMaxSize().padding(bottom = 16.dp),

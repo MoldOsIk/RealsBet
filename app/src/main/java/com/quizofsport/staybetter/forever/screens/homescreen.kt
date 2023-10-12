@@ -1,5 +1,6 @@
 package com.quizofsport.staybetter.forever.screens
 
+import android.app.Activity
 import android.view.ViewGroup
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -45,12 +46,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieDrawable
+import com.quizofsport.staybetter.forever.HOMESCREEN
 import com.quizofsport.staybetter.forever.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,9 +64,9 @@ import com.quizofsport.staybetter.forever.ui.theme.metal
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun homescreen(goPreGame:() -> Unit, goRules:() -> Unit, goPolicy:() -> Unit,navController: NavController) {
+fun homescreen(goPreGame:() -> Unit,navController: NavController) {
 
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
     val infiniteTransition = rememberInfiniteTransition()
     val infiniteRepeatableSpec = remember {
         InfiniteRepeatableSpec<Float>(tween(2000, easing = LinearEasing),
@@ -151,24 +154,10 @@ fun homescreen(goPreGame:() -> Unit, goRules:() -> Unit, goPolicy:() -> Unit,nav
                         enter = fadeIn(tween(450)), exit = fadeOut(tween(450)),
                         modifier = Modifier.animateItemPlacement(tween(450))) {
                         but_sport(onClick = { },all = 16.dp) {
-                            text(text = stringResource(id = R.string.rules), size = 18,color = black)
+                            text(text = stringResource(id = R.string.rules),
+                                size = 18,color = black, fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center)
 
-                        }
-                    }
-                }
-                item("POLICY") {
-                    AnimatedVisibility(visible =  !showRules.value ,modifier = Modifier.animateItemPlacement(tween(450)),
-                        enter = fadeIn(tween(450))+fadeIn()+slideInVertically(tween(450)) {(it*1.1).toInt()},
-                        exit = fadeOut(tween(450))+slideOutVertically(tween(450)) {(it*1.1).toInt()}) {
-                        but_sport(onClick = {
-                            cs.launch {
-                                showMenu.value = false
-                                delay(450)
-                                goPolicy()
-                            }
-                        },modifier = Modifier.animateContentSize(tween(450))
-                        ) {
-                            text(text = "POLICY", size = 30, color = black)
                         }
                     }
                 }
@@ -225,9 +214,15 @@ fun homescreen(goPreGame:() -> Unit, goRules:() -> Unit, goPolicy:() -> Unit,nav
             }
 
         }
+        else if(navController.currentBackStackEntry?.destination?.route == HOMESCREEN){
+            context.finishAffinity()
 
+        }
         else
+        {
             navController.popBackStack()
+        }
+
 
     }
 }
